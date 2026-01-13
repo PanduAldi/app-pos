@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Transaction History - POS Admin</title>
+<!-- Google Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "primary-hover": "#1068c2",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2632",
+                        "border-light": "#e7edf3",
+                        "border-dark": "#2a3b4d",
+                        "text-main": "#0d141b",
+                        "text-secondary": "#4c739a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main dark:text-gray-100 font-display antialiased overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- Sidebar -->
+<aside class="flex flex-col w-64 h-full bg-surface-light dark:bg-surface-dark border-r border-border-light dark:border-border-dark flex-shrink-0 transition-colors">
+<div class="p-6 flex items-center gap-3">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-xl">point_of_sale</span>
+</div>
+<h1 class="text-lg font-bold tracking-tight text-text-main dark:text-white">POS Admin</h1>
+</div>
+<nav class="flex-1 px-4 flex flex-col gap-2 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary dark:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined icon-filled">receipt_long</span>
+<span class="text-sm font-medium">Transactions</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">people</span>
+<span class="text-sm font-medium">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-border-light dark:border-border-dark">
+<div class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors">
+<div class="size-9 rounded-full bg-cover bg-center border border-border-light dark:border-border-dark" data-alt="User profile avatar placeholder showing abstract pattern" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDGLt3KrBT20Hgc-B8m2fdpmikuAC-dcdMFub1ePch1STGFeHMXi7jQgWRf6cJ-ccvkKcZQMHBJZvJPbA3PfK8-lYtsyY9YlmCNVYjojK1NMOklW6_-I51_XVwklEEEXLB_biXxB7_vgQ2bWQxoP7ojkequR6l-wn-QQyZZhiWcVFhyDKdM8RlBEpoQBDeoIlCY0Hk988fq95i0FG3iekQe6DW6vLo9sBJ8Y8_KKwrdubrcJOXKrMM90Z1xBOiuK29nzMt5Ht4io4c");'></div>
+<div class="flex flex-col overflow-hidden">
+<span class="text-sm font-semibold truncate text-text-main dark:text-white">Alex Morgan</span>
+<span class="text-xs text-text-secondary dark:text-gray-400 truncate">Store Manager</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-background-light dark:bg-background-dark">
+<!-- Top Header -->
+<header class="flex items-center justify-between px-6 py-4 bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark">
+<div class="flex items-center gap-4">
+<button class="md:hidden p-1 text-text-secondary hover:text-text-main">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Breadcrumbs or simple title for mobile -->
+<span class="text-sm text-text-secondary dark:text-gray-400 md:hidden">Transactions</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center size-9 rounded-full text-text-secondary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-surface-light dark:border-surface-dark"></span>
+</button>
+<button class="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-medium text-text-main dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined text-lg">logout</span>
+<span>Logout</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-4 md:p-8">
+<div class="max-w-6xl mx-auto space-y-6">
+<!-- Page Heading & Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="flex flex-col gap-1">
+<h2 class="text-2xl md:text-3xl font-bold text-text-main dark:text-white tracking-tight">Transaction History</h2>
+<p class="text-text-secondary dark:text-gray-400 text-sm">View and manage past sales records across all terminals.</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg text-sm font-medium text-text-main dark:text-white shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-lg">download</span>
+                                Export
+                            </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg text-sm font-bold shadow-md shadow-blue-500/20 transition-all">
+<span class="material-symbols-outlined text-lg">add</span>
+                                New Sale
+                            </button>
+</div>
+</div>
+<!-- Search & Filters Bar -->
+<div class="flex flex-col lg:flex-row gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-border-light dark:border-border-dark shadow-sm">
+<!-- Search Input -->
+<div class="flex-1 relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary dark:text-gray-400">
+<span class="material-symbols-outlined">search</span>
+</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-lg bg-background-light dark:bg-background-dark border-none focus:ring-2 focus:ring-primary/50 text-text-main dark:text-white placeholder:text-text-secondary dark:placeholder:text-gray-500 text-sm font-medium transition-shadow" placeholder="Search by Transaction ID or Cashier Name..." type="text"/>
+</div>
+<!-- Date Filters -->
+<div class="flex overflow-x-auto gap-2 pb-1 lg:pb-0 scrollbar-hide">
+<button class="flex h-10 shrink-0 items-center gap-2 rounded-lg bg-primary/10 px-4 text-sm font-semibold text-primary ring-1 ring-inset ring-primary/20">
+<span>Today</span>
+</button>
+<button class="flex h-10 shrink-0 items-center gap-2 rounded-lg bg-background-light dark:bg-background-dark px-4 text-sm font-medium text-text-main dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+<span>Yesterday</span>
+</button>
+<button class="flex h-10 shrink-0 items-center gap-2 rounded-lg bg-background-light dark:bg-background-dark px-4 text-sm font-medium text-text-main dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+<span>Last 7 Days</span>
+</button>
+<button class="flex h-10 shrink-0 items-center gap-2 rounded-lg bg-background-light dark:bg-background-dark px-4 text-sm font-medium text-text-main dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined text-lg">calendar_month</span>
+<span>Custom Range</span>
+</button>
+</div>
+</div>
+<!-- Data Table Card -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm overflow-hidden flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-gray-50/50 dark:bg-gray-800/50 border-b border-border-light dark:border-border-dark">
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-secondary dark:text-gray-400">Transaction ID</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-secondary dark:text-gray-400">Date &amp; Time</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-secondary dark:text-gray-400">Cashier</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-secondary dark:text-gray-400">Status</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-secondary dark:text-gray-400 text-right">Total Amount</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-text-secondary dark:text-gray-400 text-center">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-light dark:divide-border-dark">
+<!-- Row 1 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="py-4 px-6 font-medium text-text-main dark:text-white">#TRX-8932</td>
+<td class="py-4 px-6 text-sm text-text-secondary dark:text-gray-400">
+<div class="flex flex-col">
+<span class="text-text-main dark:text-gray-300 font-medium">Oct 24, 2023</span>
+<span class="text-xs">14:32 PM</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs font-bold">SJ</div>
+<span class="text-sm font-medium text-text-main dark:text-gray-200">Sarah Jenkins</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+<span class="size-1.5 rounded-full bg-emerald-500"></span>
+                                                Completed
+                                            </span>
+</td>
+<td class="py-4 px-6 text-right font-bold text-text-main dark:text-white">$45.20</td>
+<td class="py-4 px-6 text-center">
+<button class="inline-flex items-center justify-center p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="py-4 px-6 font-medium text-text-main dark:text-white">#TRX-8931</td>
+<td class="py-4 px-6 text-sm text-text-secondary dark:text-gray-400">
+<div class="flex flex-col">
+<span class="text-text-main dark:text-gray-300 font-medium">Oct 24, 2023</span>
+<span class="text-xs">14:15 PM</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xs font-bold">MR</div>
+<span class="text-sm font-medium text-text-main dark:text-gray-200">Mike Ross</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+<span class="size-1.5 rounded-full bg-emerald-500"></span>
+                                                Completed
+                                            </span>
+</td>
+<td class="py-4 px-6 text-right font-bold text-text-main dark:text-white">$12.50</td>
+<td class="py-4 px-6 text-center">
+<button class="inline-flex items-center justify-center p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="py-4 px-6 font-medium text-text-main dark:text-white">#TRX-8930</td>
+<td class="py-4 px-6 text-sm text-text-secondary dark:text-gray-400">
+<div class="flex flex-col">
+<span class="text-text-main dark:text-gray-300 font-medium">Oct 24, 2023</span>
+<span class="text-xs">13:45 PM</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs font-bold">SJ</div>
+<span class="text-sm font-medium text-text-main dark:text-gray-200">Sarah Jenkins</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800">
+<span class="size-1.5 rounded-full bg-red-500"></span>
+                                                Refunded
+                                            </span>
+</td>
+<td class="py-4 px-6 text-right font-bold text-text-main dark:text-white line-through decoration-red-500/50 decoration-2 text-opacity-50">$89.00</td>
+<td class="py-4 px-6 text-center">
+<button class="inline-flex items-center justify-center p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="py-4 px-6 font-medium text-text-main dark:text-white">#TRX-8929</td>
+<td class="py-4 px-6 text-sm text-text-secondary dark:text-gray-400">
+<div class="flex flex-col">
+<span class="text-text-main dark:text-gray-300 font-medium">Oct 24, 2023</span>
+<span class="text-xs">11:20 AM</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 flex items-center justify-center text-xs font-bold">AM</div>
+<span class="text-sm font-medium text-text-main dark:text-gray-200">Alex Morgan</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+<span class="size-1.5 rounded-full bg-emerald-500"></span>
+                                                Completed
+                                            </span>
+</td>
+<td class="py-4 px-6 text-right font-bold text-text-main dark:text-white">$124.50</td>
+<td class="py-4 px-6 text-center">
+<button class="inline-flex items-center justify-center p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="py-4 px-6 font-medium text-text-main dark:text-white">#TRX-8928</td>
+<td class="py-4 px-6 text-sm text-text-secondary dark:text-gray-400">
+<div class="flex flex-col">
+<span class="text-text-main dark:text-gray-300 font-medium">Oct 23, 2023</span>
+<span class="text-xs">18:45 PM</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xs font-bold">MR</div>
+<span class="text-sm font-medium text-text-main dark:text-gray-200">Mike Ross</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+<span class="size-1.5 rounded-full bg-emerald-500"></span>
+                                                Completed
+                                            </span>
+</td>
+<td class="py-4 px-6 text-right font-bold text-text-main dark:text-white">$32.00</td>
+<td class="py-4 px-6 text-center">
+<button class="inline-flex items-center justify-center p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex flex-col sm:flex-row items-center justify-between p-4 border-t border-border-light dark:border-border-dark gap-4">
+<p class="text-sm text-text-secondary dark:text-gray-400">
+                                Showing <span class="font-medium text-text-main dark:text-white">1</span> to <span class="font-medium text-text-main dark:text-white">5</span> of <span class="font-medium text-text-main dark:text-white">128</span> results
+                            </p>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg border border-border-light dark:border-border-dark text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="size-8 rounded-lg bg-primary text-white text-sm font-medium flex items-center justify-center shadow-sm">1</button>
+<button class="size-8 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-secondary dark:text-gray-300 text-sm font-medium flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">2</button>
+<button class="size-8 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-secondary dark:text-gray-300 text-sm font-medium flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">3</button>
+<span class="text-text-secondary dark:text-gray-400 px-1">...</span>
+<button class="size-8 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-secondary dark:text-gray-300 text-sm font-medium flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">12</button>
+<button class="p-2 rounded-lg border border-border-light dark:border-border-dark text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POS Settings</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem", 
+                        "lg": "0.5rem", 
+                        "xl": "0.75rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111418] dark:text-gray-100 overflow-hidden">
+<div class="relative flex h-screen w-full bg-background-light dark:bg-background-dark group/design-root overflow-hidden">
+<!-- Sidebar Navigation -->
+<div class="flex h-full w-[280px] flex-col border-r border-[#dbe0e6] dark:border-gray-800 bg-white dark:bg-[#1A2633] shrink-0">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<!-- App Header in Sidebar -->
+<div class="flex gap-3 items-center px-2 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-primary/10 flex items-center justify-center text-primary" data-alt="Abstract blue geometric logo for POS system">
+<span class="material-symbols-outlined text-2xl">point_of_sale</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-[#111418] dark:text-white text-base font-bold leading-normal">Simple POS</h1>
+<p class="text-[#617589] dark:text-gray-400 text-xs font-normal leading-normal">v1.0.4</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-2 mt-4">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined text-[#617589] dark:text-gray-400 group-hover:text-[#111418] dark:group-hover:text-white">dashboard</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Dashboard</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined text-[#617589] dark:text-gray-400 group-hover:text-[#111418] dark:group-hover:text-white">calculate</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Register</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined text-[#617589] dark:text-gray-400 group-hover:text-[#111418] dark:group-hover:text-white">receipt_long</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Transactions</p>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors group">
+<span class="material-symbols-outlined text-[#617589] dark:text-gray-400 group-hover:text-[#111418] dark:group-hover:text-white">inventory_2</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Items</p>
+</div>
+<!-- Active Settings Link -->
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 cursor-default">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">settings</span>
+<p class="text-primary text-sm font-bold leading-normal">Settings</p>
+</div>
+</div>
+</div>
+<!-- Logout Button -->
+<button class="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 text-[#111418] dark:text-gray-200 transition-colors">
+<span class="material-symbols-outlined text-red-500">logout</span>
+<span class="truncate text-sm font-medium text-red-500">Logout</span>
+</button>
+</div>
+</div>
+<!-- Main Content Area -->
+<div class="flex flex-1 flex-col h-full overflow-hidden relative">
+<!-- Top Header for Main Content -->
+<header class="h-16 border-b border-[#dbe0e6] dark:border-gray-800 bg-white dark:bg-[#1A2633] flex items-center justify-between px-6 shrink-0 z-10">
+<div class="flex items-center gap-4">
+<h2 class="text-lg font-bold text-[#111418] dark:text-white">Settings</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="size-8 rounded-full bg-gray-200 dark:bg-gray-700 bg-cover bg-center" data-alt="User avatar placeholder with neutral background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZsyFAGZM6SqIHYwkqbGqcDJcFMAKbwNm6zB-WthDJfFRz58qZmwq2sKQu00SwLdXEJFpxhI-x6LNiDa1X_CMTGNmU9_oMcoewu0jnmMwP9q2BOdPMMeYHC1C76UoRLyNT0xEBqxMyJx1p7V03eWaHFzpXcdg6c-5i3zfCeoVBY53sGIYmWZ_5Y_5noRWZ3olvGqqSmEOf_1KknLQ-hx2yYR1PJVWcT7tYHcyN1yCu8j6iQe7q7t1IDz287yOWNVBkPZTYnu4HXlo");'></div>
+</div>
+</header>
+<!-- Scrollable Content -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 md:p-10">
+<div class="max-w-4xl mx-auto flex flex-col gap-8 pb-20">
+<!-- Page Heading & Introduction -->
+<div class="flex flex-wrap justify-between items-end gap-4">
+<div class="flex flex-col gap-2">
+<h1 class="text-[#111418] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Application Settings</h1>
+<p class="text-[#617589] dark:text-gray-400 text-base font-normal leading-normal max-w-2xl">Manage your store preferences, cashier configurations, and receipt details.</p>
+</div>
+<button class="flex min-w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-primary hover:bg-blue-600 transition-colors text-white text-sm font-bold leading-normal tracking-[0.015em] shadow-sm">
+<span class="truncate">Save Changes</span>
+</button>
+</div>
+<!-- Section 1: General Store Info -->
+<div class="flex flex-col gap-4">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-2 border-b border-[#dbe0e6] dark:border-gray-700">General Store Info</h2>
+<div class="bg-white dark:bg-[#1A2633] rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-6 shadow-sm">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<label class="flex flex-col gap-2">
+<p class="text-[#111418] dark:text-gray-200 text-sm font-bold leading-normal">Store Name</p>
+<input class="form-input flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 h-12 placeholder:text-[#617589] px-4 text-base font-normal transition-all" placeholder="e.g. Downtown Coffee" value="Downtown Coffee"/>
+</label>
+<label class="flex flex-col gap-2">
+<p class="text-[#111418] dark:text-gray-200 text-sm font-bold leading-normal">Store Address</p>
+<input class="form-input flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 h-12 placeholder:text-[#617589] px-4 text-base font-normal transition-all" placeholder="e.g. 123 Main St" value="123 Main St, Seattle, WA"/>
+</label>
+<label class="flex flex-col gap-2">
+<p class="text-[#111418] dark:text-gray-200 text-sm font-bold leading-normal">Currency</p>
+<div class="relative">
+<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 h-12 px-4 text-base font-normal transition-all appearance-none pr-10">
+<option value="USD">USD ($)</option>
+<option value="EUR">EUR (€)</option>
+<option value="GBP">GBP (£)</option>
+<option value="JPY">JPY (¥)</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#617589]">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</label>
+<label class="flex flex-col gap-2">
+<p class="text-[#111418] dark:text-gray-200 text-sm font-bold leading-normal">Time Zone</p>
+<div class="relative">
+<select class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 h-12 px-4 text-base font-normal transition-all appearance-none pr-10">
+<option value="PST">Pacific Standard Time (PST)</option>
+<option value="EST">Eastern Standard Time (EST)</option>
+<option value="UTC">Coordinated Universal Time (UTC)</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[#617589]">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</label>
+</div>
+</div>
+</div>
+<!-- Section 2: Cashier Preferences -->
+<div class="flex flex-col gap-4">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-2 border-b border-[#dbe0e6] dark:border-gray-700">Cashier Preferences</h2>
+<div class="bg-white dark:bg-[#1A2633] rounded-xl border border-[#dbe0e6] dark:border-gray-700 shadow-sm divide-y divide-[#dbe0e6] dark:divide-gray-700">
+<!-- Toggle Item -->
+<div class="flex items-center justify-between p-4 md:p-6">
+<div class="flex flex-col gap-1">
+<p class="text-[#111418] dark:text-white text-base font-medium">Touch Screen Mode</p>
+<p class="text-[#617589] dark:text-gray-400 text-sm">Increase button sizes and spacing for touch devices.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Toggle Item -->
+<div class="flex items-center justify-between p-4 md:p-6">
+<div class="flex flex-col gap-1">
+<p class="text-[#111418] dark:text-white text-base font-medium">Dark Mode</p>
+<p class="text-[#617589] dark:text-gray-400 text-sm">Switch the interface to a dark theme for low-light environments.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Toggle Item -->
+<div class="flex items-center justify-between p-4 md:p-6">
+<div class="flex flex-col gap-1">
+<p class="text-[#111418] dark:text-white text-base font-medium">Sound Effects</p>
+<p class="text-[#617589] dark:text-gray-400 text-sm">Play a beep sound when an item is successfully scanned.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Section 3: Receipt Configuration -->
+<div class="flex flex-col gap-4">
+<h2 class="text-[#111418] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-2 border-b border-[#dbe0e6] dark:border-gray-700">Receipt Configuration</h2>
+<div class="bg-white dark:bg-[#1A2633] rounded-xl border border-[#dbe0e6] dark:border-gray-700 p-6 shadow-sm flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<div class="flex flex-col gap-1">
+<p class="text-[#111418] dark:text-white text-base font-medium">Auto-Print Receipt</p>
+<p class="text-[#617589] dark:text-gray-400 text-sm">Automatically print a receipt when a transaction is completed.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+<label class="flex flex-col gap-2">
+<p class="text-[#111418] dark:text-gray-200 text-sm font-bold leading-normal">Footer Message</p>
+<textarea class="form-textarea flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 min-h-[100px] placeholder:text-[#617589] p-4 text-base font-normal transition-all" placeholder="Enter a message to appear at the bottom of receipts...">Thank you for shopping with us!
+Visit us again soon.</textarea>
+<p class="text-[#617589] dark:text-gray-500 text-xs">This message will appear centered at the bottom of the printed receipt.</p>
+</label>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

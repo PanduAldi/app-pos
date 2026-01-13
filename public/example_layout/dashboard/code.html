@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POS Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#0d141b] dark:text-white transition-colors duration-200">
+<div class="relative flex min-h-screen w-full flex-row overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 border-r border-[#cfdbe7] dark:border-gray-800 bg-white dark:bg-[#1A2633] flex-shrink-0 flex flex-col justify-between hidden md:flex">
+<div class="flex flex-col gap-4 p-4 h-full">
+<!-- Profile/Brand Area -->
+<div class="flex gap-3 items-center mb-6">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-12 shadow-sm border border-slate-200 dark:border-slate-700" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBxHXq9S7HIbdpzW8G-Ita_a-6Das2gYVIlWEeTT58FtKcODduuXk7BlXgbMYwpP85qb97EZj_xXTU_IuqsH3bCrFs4gnCcqNGIYnsXu4S_TvQsFT5RmmMMyo3-elvpxbG7jqhD1rsu38t-1uK6Hm5mthKeK9SFRvwzuxJ4dewNSfx1YYbN4sbEc6KQ33aEn0OKfsvC3iolXAi9e21aRfPc2iV9VQHW8eTdD-gAb0dNIpjSsS-1ObV1DODIhQjj1-8iabBt7h1Ap1U");'></div>
+<div class="flex flex-col">
+<h1 class="text-base font-bold leading-normal text-slate-900 dark:text-white">POS System</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">Admin View</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-primary" style="font-size: 24px;">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors" style="font-size: 24px;">point_of_sale</span>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-medium leading-normal group-hover:text-primary transition-colors">New Sale</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors" style="font-size: 24px;">inventory_2</span>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-medium leading-normal group-hover:text-primary transition-colors">Products</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors" style="font-size: 24px;">history</span>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-medium leading-normal group-hover:text-primary transition-colors">History</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors" style="font-size: 24px;">group</span>
+<p class="text-slate-900 dark:text-slate-100 text-sm font-medium leading-normal group-hover:text-primary transition-colors">Users</p>
+</a>
+</nav>
+<div class="mt-auto">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-red-600 transition-colors" style="font-size: 24px;">logout</span>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal group-hover:text-red-600 transition-colors">Logout</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-screen overflow-y-auto">
+<div class="flex-1 px-4 md:px-8 py-8 w-full max-w-[1200px] mx-auto">
+<!-- Page Header -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+<div class="flex flex-col gap-2">
+<h1 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight">Simple POS System</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base font-normal">Welcome back, Manager. Here is what's happening today.</p>
+</div>
+<div class="flex items-center gap-3 bg-white dark:bg-[#1A2633] px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+<span class="material-symbols-outlined text-slate-400" style="font-size: 20px;">calendar_today</span>
+<span class="text-sm font-medium text-slate-700 dark:text-slate-300">Oct 24, 2023</span>
+</div>
+</header>
+<!-- Stats Widgets -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+<div class="flex flex-col gap-1 p-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1A2633] shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-primary text-6xl">payments</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Today's Sales</p>
+<div class="flex items-baseline gap-2 mt-2">
+<p class="text-slate-900 dark:text-white text-3xl font-bold tracking-tight">$1,450.50</p>
+<span class="inline-flex items-center text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded text-xs font-bold">+12%</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 p-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1A2633] shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-primary text-6xl">receipt_long</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Total Transactions</p>
+<div class="flex items-baseline gap-2 mt-2">
+<p class="text-slate-900 dark:text-white text-3xl font-bold tracking-tight">58</p>
+<span class="inline-flex items-center text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-0.5 rounded text-xs font-bold">+5%</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 p-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1A2633] shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-orange-500 text-6xl">inventory</span>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Low Stock Alerts</p>
+<div class="flex items-baseline gap-2 mt-2">
+<p class="text-slate-900 dark:text-white text-3xl font-bold tracking-tight">4 Items</p>
+<span class="inline-flex items-center text-slate-500 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-xs font-bold">Stable</span>
+</div>
+</div>
+</div>
+<!-- Quick Actions Title -->
+<div class="mb-4">
+<h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight">Quick Actions</h2>
+</div>
+<!-- Quick Action Buttons -->
+<div class="flex flex-wrap gap-4 mb-8">
+<button class="flex items-center justify-center gap-3 px-8 py-4 bg-primary hover:bg-blue-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 w-full sm:w-auto min-w-[200px]">
+<span class="material-symbols-outlined" style="font-size: 28px;">add_circle</span>
+<span class="text-lg font-bold">Start New Transaction</span>
+</button>
+<button class="flex items-center justify-center gap-3 px-8 py-4 bg-white dark:bg-[#1A2633] border border-slate-200 dark:border-slate-700 hover:border-primary/50 text-slate-700 dark:text-slate-200 rounded-xl shadow-sm hover:shadow-md transition-all w-full sm:w-auto min-w-[200px]">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400" style="font-size: 28px;">add_box</span>
+<span class="text-lg font-medium">Add Product</span>
+</button>
+</div>
+<!-- Recent Activity Table -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight">Recent Transactions</h2>
+<a class="text-primary text-sm font-medium hover:underline" href="#">View All</a>
+</div>
+<div class="bg-white dark:bg-[#1A2633] rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-slate-100 dark:border-slate-700/50 bg-slate-50 dark:bg-slate-800/50">
+<th class="p-4 text-xs font-semibold tracking-wide text-slate-500 dark:text-slate-400 uppercase">Receipt ID</th>
+<th class="p-4 text-xs font-semibold tracking-wide text-slate-500 dark:text-slate-400 uppercase">Date &amp; Time</th>
+<th class="p-4 text-xs font-semibold tracking-wide text-slate-500 dark:text-slate-400 uppercase">Method</th>
+<th class="p-4 text-xs font-semibold tracking-wide text-slate-500 dark:text-slate-400 uppercase">Items</th>
+<th class="p-4 text-xs font-semibold tracking-wide text-slate-500 dark:text-slate-400 uppercase text-right">Total Amount</th>
+<th class="p-4 text-xs font-semibold tracking-wide text-slate-500 dark:text-slate-400 uppercase text-center">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-700/50">
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="p-4 text-sm font-medium text-slate-900 dark:text-white">#TRX-0089</td>
+<td class="p-4 text-sm text-slate-500 dark:text-slate-400">Oct 24, 10:42 AM</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">credit_card</span>
+                                                Credit Card
+                                            </div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">4</td>
+<td class="p-4 text-sm font-bold text-slate-900 dark:text-white text-right">$124.50</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Completed</span>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="p-4 text-sm font-medium text-slate-900 dark:text-white">#TRX-0088</td>
+<td class="p-4 text-sm text-slate-500 dark:text-slate-400">Oct 24, 10:15 AM</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">payments</span>
+                                                Cash
+                                            </div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">1</td>
+<td class="p-4 text-sm font-bold text-slate-900 dark:text-white text-right">$12.99</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Completed</span>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="p-4 text-sm font-medium text-slate-900 dark:text-white">#TRX-0087</td>
+<td class="p-4 text-sm text-slate-500 dark:text-slate-400">Oct 24, 09:55 AM</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">qr_code_scanner</span>
+                                                QR Pay
+                                            </div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">8</td>
+<td class="p-4 text-sm font-bold text-slate-900 dark:text-white text-right">$245.00</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300">Pending</span>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="p-4 text-sm font-medium text-slate-900 dark:text-white">#TRX-0086</td>
+<td class="p-4 text-sm text-slate-500 dark:text-slate-400">Oct 24, 09:30 AM</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">credit_card</span>
+                                                Debit Card
+                                            </div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">2</td>
+<td class="p-4 text-sm font-bold text-slate-900 dark:text-white text-right">$45.50</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center justify-center px-2 py-1 text-xs font-medium rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Completed</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800/50 p-3 flex justify-center border-t border-slate-100 dark:border-slate-700/50">
+<button class="text-sm text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium transition-colors">Show more transactions</button>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-12 text-center text-xs text-slate-400 dark:text-slate-600 py-4">
+<p>© 2023 Simple POS System. Version 1.2.0</p>
+</footer>
+</div>
+</main>
+</div>
+</body></html>
