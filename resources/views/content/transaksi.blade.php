@@ -31,7 +31,7 @@
                 @foreach($produk as $p)
                 <!-- Product Card -->
                 <div class="product-card group cursor-pointer flex flex-col rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary/50 transition-all active:scale-95"
-                    data-id="{{ $p->id }}" data-name="{{ $p->nama_produk }}" data-price="{{ $p->harga }}" data-category="{{ $p->kategori->nama_kategori }}">
+                    data-id="{{ $p->id }}" data-name="{{ $p->nama_produk }}" data-price="{{ $p->harga }}" data-category="{{ $p->kategori->nama_kategori }}" data-stock="{{ $p->stok }}">
                     <div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl relative">
                         {{-- Image placeholder --}}
                         <div class="w-full h-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
@@ -110,9 +110,9 @@
                 <div class="flex gap-2" id="payment-methods">
                     <button data-method="cash" class="payment-method-btn flex-1 py-2 rounded-lg bg-white dark:bg-slate-800 border-2 border-primary text-primary text-sm font-medium flex justify-center items-center gap-2 shadow-sm">
                         <span class="material-symbols-outlined text-lg">payments</span> Tunai </button>
-                    <button data-method="card" class="payment-method-btn flex-1 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex justify-center items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700">
-                        <span class="material-symbols-outlined text-lg">credit_card</span> Kartu </button>
-                    <button data-method="qr" class="payment-method-btn flex-1 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex justify-center items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <button data-method="transfer" class="payment-method-btn flex-1 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex justify-center items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700">
+                        <span class="material-symbols-outlined text-lg">account_balance</span> Transfer </button>
+                    <button data-method="qris" class="payment-method-btn flex-1 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex justify-center items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700">
                         <span class="material-symbols-outlined text-lg">qr_code</span> QRIS </button>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mt-1">
@@ -250,6 +250,23 @@
         window.updateQty = function(id, delta) {
             const index = cart.findIndex(item => item.id === id);
             if (index !== -1) {
+                if (delta > 0) {
+                    const card = document.querySelector(`.product-card[data-id="${id}"]`);
+                    const stock = parseInt(card.dataset.stock);
+                    if (cart[index].qty >= stock) {
+                        Swal.fire({
+                            title: 'Stok Terbatas',
+                            text: 'Jumlah melebihi stok yang tersedia',
+                            icon: 'warning',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                        return;
+                    }
+                }
+
                 cart[index].qty += delta;
                 if (cart[index].qty <= 0) {
                     cart.splice(index, 1);
@@ -294,6 +311,34 @@
                 const id = parseInt(card.dataset.id);
                 const name = card.dataset.name;
                 const price = parseFloat(card.dataset.price);
+                const stock = parseInt(card.dataset.stock);
+
+                if (stock <= 0) {
+                    Swal.fire({
+                        title: 'Stok Habis',
+                        text: 'Produk ini sedang tidak tersedia',
+                        icon: 'error',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    return;
+                }
+
+                const existingCount = cart.find(item => item.id === id)?.qty || 0;
+                if (existingCount >= stock) {
+                    Swal.fire({
+                        title: 'Stok Terbatas',
+                        text: 'Jumlah di keranjang sudah mencapai batas stok',
+                        icon: 'warning',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    return;
+                }
 
                 const existing = cart.find(item => item.id === id);
                 if (existing) {
@@ -382,36 +427,86 @@
 
             if (paymentMethod === 'cash' && received < total) {
                 Swal.fire({
-                    title: 'Insufficient Payment',
-                    text: 'Cash received is less than the total amount.',
+                    title: 'Pembayaran Kurang',
+                    text: 'Uang yang diterima kurang dari total tagihan.',
                     icon: 'error',
                     confirmButtonColor: '#3b82f6'
                 });
                 return;
             }
 
+            let confirmHtml = `Total: <b>${formatRupiah(total)}</b><br>Metode: <b>${paymentMethod.toUpperCase()}</b>`;
+
+            if (paymentMethod === 'qris') {
+                confirmHtml += `
+                    <div class="mt-4 p-4 bg-white border rounded-xl flex flex-col items-center gap-2">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=POS-CAFE-${Date.now()}" alt="QRIS" class="w-128 h-128">
+                        <p class="text-[10px] text-slate-400 font-mono">Scan untuk QRIS</p>
+                    </div>
+                `;
+            }
+
             Swal.fire({
-                title: 'Confirm Transaction',
-                html: `Total: <b>${formatRupiah(total)}</b><br>Method: <b>${paymentMethod.toUpperCase()}</b>`,
+                title: 'Konfirmasi Transaksi',
+                html: confirmHtml,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#3b82f6',
                 cancelButtonColor: '#64748b',
-                confirmButtonText: 'Yes, Save it!'
+                confirmButtonText: 'Simpan Transaksi',
+                cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Show loading
                     Swal.fire({
-                        title: 'Success!',
-                        text: 'Transaction saved successfully.',
-                        icon: 'success',
-                        timer: 2000,
-                        showConfirmButton: false
+                        title: 'Memproses...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
                     });
 
-                    // Reset POS
-                    cart = [];
-                    cashReceivedInput.value = '0';
-                    updateCartUI();
+                    // Send data
+                    fetch('/transaksi', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                total: total,
+                                bayar: paymentMethod === 'cash' ? received : total,
+                                kembali: paymentMethod === 'cash' ? (received - total) : 0,
+                                metode_pembayaran: paymentMethod,
+                                items: cart
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: data.message,
+                                    icon: 'success',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    // Reset POS
+                                    cart = [];
+                                    cashReceivedInput.value = '0';
+                                    updateCartUI();
+                                    // Refresh page or update stock via JS? 
+                                    // Refresh is simpler to sync all data
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire('Gagal', data.message, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire('Error', 'Terjadi kesalahan sistem.', 'error');
+                        });
                 }
             });
         });

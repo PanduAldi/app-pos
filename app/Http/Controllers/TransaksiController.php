@@ -24,6 +24,70 @@ class TransaksiController extends Controller
         ]);
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'total' => 'required|numeric',
+            'bayar' => 'required|numeric',
+            'kembali' => 'required|numeric',
+            'metode_pembayaran' => 'required|string',
+            'items' => 'required|array',
+            'items.*.id' => 'required|exists:produk,id',
+            'items.*.qty' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Generate Kode Transaksi: TR-YYYYMMDD-XXXX
+            $date = Carbon::now()->format('Ymd');
+            $latest = Transaksi::whereDate('tanggal', Carbon::now())->latest()->first();
+            $number = $latest ? (int) substr($latest->kode_transaksi, -4) + 1 : 1;
+            $kode = 'TR-' . $date . '-' . str_pad($number, 4, '0', STR_PAD_LEFT);
+
+            $transaksi = Transaksi::create([
+                'kode_transaksi' => $kode,
+                'tanggal' => Carbon::now(),
+                'id_user' => auth()->id(),
+                'total' => $request->total,
+                'bayar' => $request->bayar,
+                'kembali' => $request->kembali,
+                'metode_pembayaran' => $request->metode_pembayaran
+            ]);
+
+            foreach ($request->items as $item) {
+                // Save Detail
+                $transaksi->detailTransaksi()->create([
+                    'id_produk' => $item['id'],
+                    'qty' => $item['qty'],
+                    'subtotal' => $item['price'] * $item['qty']
+                ]);
+
+                // Update Stock
+                $produk = Produk::findOrFail($item['id']);
+                if ($produk->stok < $item['qty']) {
+                    throw new \Exception("Stok produk '{$produk->nama_produk}' tidak mencukupi.");
+                }
+                $produk->decrement('stok', $item['qty']);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Transaksi berhasil disimpan',
+                'kode_transaksi' => $kode
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function laporan(Request $request)
     {
         $startDate = $request->get('start_date') ? Carbon::parse($request->get('start_date'))->startOfDay() : Carbon::now()->startOfMonth();

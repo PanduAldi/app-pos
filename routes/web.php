@@ -14,6 +14,7 @@ Route::middleware(['auth', 'role:admin,kasir'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     //transaksi route
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
+    Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
     Route::get("/laporan", [TransaksiController::class, 'laporan'])->name('laporan');
     Route::get("/laporan/detail/{id}", [TransaksiController::class, 'detailLaporan'])->name('laporan.detail');
 
