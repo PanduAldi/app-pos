@@ -9,23 +9,28 @@
         </div>
         <!-- Navigation Links -->
         <nav class="p-4 space-y-2">
-            <a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-400 group transition-colors" href="{{ route('dashboard') }}">
+            <a class="flex items-center gap-3 px-3 py-3 rounded-lg group transition-colors {{ Request::is('dashboard') || Request::is('/') ? 'bg-primary/10 text-primary' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-400' }}" href="{{ route('dashboard') }}">
                 <span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">dashboard</span>
                 <span class="hidden lg:block text-sm font-medium">Dashboard</span>
             </a>
+
             @if(auth()->user()->role == "kasir")
-            <a class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/10 text-primary" href="{{ route('transaksi') }}">
-                <span class="material-symbols-outlined text-2xl fill-1">receipt_long</span>
-                <span class="hidden lg:block text-sm font-medium">Transactions</span>
+            <a class="flex items-center gap-3 px-3 py-3 rounded-lg group transition-colors {{ Request::is('transaksi') ? 'bg-primary/10 text-primary' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-400' }}" href="{{ route('transaksi') }}">
+                <span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">receipt_long</span>
+                <span class="hidden lg:block text-sm font-medium">Transaksi</span>
             </a>
             @endif
 
             @if(auth()->user()->role == "admin")
-            <a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-400 group transition-colors" href="#">
+            <a class="flex items-center gap-3 px-3 py-3 rounded-lg group transition-colors {{ Request::is('produk') ? 'bg-primary/10 text-primary' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-400' }}" href="{{ route('produk') }}">
                 <span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">inventory_2</span>
-                <span class="hidden lg:block text-sm font-medium">Inventory</span>
+                <span class="hidden lg:block text-sm font-medium">Produk</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-3 rounded-lg text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-400 group transition-colors" href="{{ route('laporan') }}">
+            <a class="flex items-center gap-3 px-3 py-3 rounded-lg group transition-colors {{ Request::is('kategori') ? 'bg-primary/10 text-primary' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-400' }}" href="{{ route('kategori') }}">
+                <span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">category</span>
+                <span class="hidden lg:block text-sm font-medium">Kategori</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-3 rounded-lg group transition-colors {{ Request::is('laporan') ? 'bg-primary/10 text-primary' : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 dark:text-slate-400' }}" href="{{ route('laporan') }}">
                 <span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">assessment</span>
                 <span class="hidden lg:block text-sm font-medium">Laporan</span>
             </a>

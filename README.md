@@ -20,7 +20,6 @@ Pastikan sistem Anda memenuhi persyaratan berikut:
 - PHP >= 8.2
 - Database (MySQL/MariaDB)
 - Composer
-- Node.js & NPM
 
 ## Panduan Instalasi
 
@@ -37,7 +36,7 @@ Ikuti langkah-langkah di bawah ini untuk memulai pengembangan:
     Aplikasi ini menyediakan perintah kustom untuk menginstal dependensi (Composer & NPM), menyalin file `.env`, dan generate kunci aplikasi:
 
     ```bash
-    composer run setup
+    composer install
     ```
 
 3.  **Konfigurasi Database**
@@ -68,10 +67,10 @@ Ikuti langkah-langkah di bawah ini untuk memulai pengembangan:
 
 ## Akun Demo
 
-| Role  | Email           | Password |
-| :---- | :-------------- | :------- |
-| Admin | admin@gmail.com | password |
-| Kasir | kasir@gmail.com | password |
+| Role  | Username | Password |
+| :---- | :------- | :------- |
+| Admin | admin    | password |
+| Kasir | kasir1   | password |
 
 ## Teknologi
 

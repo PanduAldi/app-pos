@@ -1,343 +1,219 @@
 @extends('layout.layout')
 
 @section('content')
-<!-- Mobile Header Placeholder (Visible only on small screens) -->
-<div class="md:hidden flex items-center justify-between p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-    <div class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-slate-600 dark:text-slate-200">menu</span>
-        <span class="font-bold text-lg">Simple POS</span>
+<div class="p-6 space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex flex-col md:flex-row md:items-center gap-4 flex-1">
+            <h1 class="text-2xl font-bold text-slate-800 dark:text-white shrink-0">Daftar Produk</h1>
+
+            <form action="{{ route('produk') }}" method="GET" class="relative w-full md:max-w-xs">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-[20px]">search</span>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk..."
+                    class="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary dark:text-white">
+            </form>
+        </div>
+
+        <button onclick="openAddModal()" class="px-5 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+            <span class="material-symbols-outlined text-[20px]">add_circle</span>
+            Tambah Produk
+        </button>
     </div>
-    <div class="size-8 rounded-full bg-slate-200" data-alt="User Avatar Placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAB2PAxqvQ4wNiT7Vj3y_tuq2n_zSCIqFPl4OdsZ8bIOTz2wLHmMfU_OtTRkFBlk8wzOc9Rb4Wf__b600GdaxgecUdTYdkJ8xjNItQ0IL4vawkUj9XzLXA9LOuvzj9ujj9jIpmmCy9JN-DiljtdCNnihDaQei3m6Fi_ft34rZ4zjpTWqeoJHzFWlbxFV4yqqIwvGMH2T6kpioRIFuFU0AcWn-9xqKl0u_bqZcYArhNBopqgGlhjKlpiijI5xisFrSmaYPfdeJAxBUQ");'></div>
-</div>
-<!-- Scrollable Content Area -->
-<div class="flex-1 overflow-y-auto">
-    <div class="w-full max-w-[1440px] mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
-        <!-- Page Heading & Actions -->
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+
+    @if(session('success'))
+    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-slate-800 dark:text-green-400 border border-green-200 dark:border-green-900/30 flex items-center gap-2" role="alert">
+        <span class="material-symbols-outlined text-[20px]">check_circle</span>
+        {{ session('success') }}
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-slate-800 dark:text-red-400 border border-red-200 dark:border-red-900/30 flex items-center gap-2" role="alert">
+        <span class="material-symbols-outlined text-[20px]">error</span>
+        {{ session('error') }}
+    </div>
+    @endif
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-[28px]">inventory_2</span>
+            </div>
             <div>
-                <h2 class="text-slate-900 dark:text-white text-3xl font-bold tracking-tight leading-tight">Product Inventory</h2>
-                <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm sm:text-base">Manage your product catalog, prices, and stock levels.</p>
-            </div>
-            <button class="bg-primary hover:bg-blue-600 text-white h-11 px-6 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-500/20 active:scale-95 transform duration-150">
-                <span class="material-symbols-outlined text-[20px]">add_circle</span>
-                Add Product
-            </button>
-        </div>
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <!-- Stat 1 -->
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Total Items</span>
-                    <div class="p-2 bg-blue-50 dark:bg-blue-500/10 rounded-lg">
-                        <span class="text-blue-600 dark:text-blue-400 material-symbols-outlined text-[20px]">category</span>
-                    </div>
-                </div>
-                <div class="flex items-end gap-3">
-                    <h3 class="text-3xl font-bold text-slate-900 dark:text-white leading-none">124</h3>
-                    <span class="text-green-600 dark:text-green-400 text-xs font-semibold px-2 py-1 bg-green-50 dark:bg-green-900/30 rounded-full flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]">trending_up</span> 12%
-                    </span>
-                </div>
-            </div>
-            <!-- Stat 2 -->
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Total Value</span>
-                    <div class="p-2 bg-green-50 dark:bg-green-500/10 rounded-lg">
-                        <span class="text-green-600 dark:text-green-400 material-symbols-outlined text-[20px]">attach_money</span>
-                    </div>
-                </div>
-                <div class="flex items-end gap-3">
-                    <h3 class="text-3xl font-bold text-slate-900 dark:text-white leading-none">$45,200</h3>
-                    <span class="text-green-600 dark:text-green-400 text-xs font-semibold px-2 py-1 bg-green-50 dark:bg-green-900/30 rounded-full flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]">trending_up</span> 5%
-                    </span>
-                </div>
-            </div>
-            <!-- Stat 3 -->
-            <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-slate-500 dark:text-slate-400 text-sm font-semibold">Low Stock Alert</span>
-                    <div class="p-2 bg-orange-50 dark:bg-orange-500/10 rounded-lg">
-                        <span class="text-orange-600 dark:text-orange-400 material-symbols-outlined text-[20px]">warning</span>
-                    </div>
-                </div>
-                <div class="flex items-end gap-3">
-                    <h3 class="text-3xl font-bold text-slate-900 dark:text-white leading-none">3</h3>
-                    <span class="text-slate-400 dark:text-slate-500 text-xs font-medium pb-1">Products need attention</span>
-                </div>
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Produk</p>
+                <p class="text-2xl font-bold text-slate-800 dark:text-white">{{ $produk->total() }}</p>
             </div>
         </div>
-        <!-- Toolbar: Search & Filter -->
-        <div class="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
-            <!-- Search -->
-            <div class="relative w-full md:max-w-md">
-                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-[20px]">search</span>
-                <input class="w-full pl-11 pr-4 h-11 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all" placeholder="Search by product name, SKU, or brand..." type="text" />
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-[28px]">warning</span>
             </div>
-            <!-- Filters -->
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <div class="relative w-full md:w-56">
-                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <span class="material-symbols-outlined text-slate-400 text-[20px]">filter_alt</span>
-                    </div>
-                    <select class="w-full h-11 pl-10 pr-10 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none cursor-pointer transition-all hover:bg-slate-50 dark:hover:bg-slate-800">
-                        <option>All Categories</option>
-                        <option>Electronics</option>
-                        <option>Accessories</option>
-                        <option>Groceries</option>
-                        <option>Clothing</option>
-                    </select>
-                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none material-symbols-outlined text-[20px]">expand_more</span>
-                </div>
-                <button class="h-11 px-4 flex items-center justify-center gap-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm font-medium whitespace-nowrap">
-                    <span class="material-symbols-outlined text-[20px]">tune</span>
-                    <span class="hidden sm:inline">More Filters</span>
-                </button>
-            </div>
-        </div>
-        <!-- Data Table -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden flex-1 flex flex-col min-h-[400px]">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse min-w-[800px]">
-                    <thead>
-                        <tr class="bg-slate-50/80 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700">
-                            <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-[35%]">Product Details</th>
-                            <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-[15%]">Category</th>
-                            <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-[15%]">Price</th>
-                            <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-[10%]">Stock</th>
-                            <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 w-[15%]">Status</th>
-                            <th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-right w-[10%]">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
-                        <!-- Row 1 -->
-                        <tr class="group hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors cursor-pointer">
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-4">
-                                    <div class="size-12 rounded-lg bg-slate-100 dark:bg-slate-900 bg-cover bg-center border border-slate-200 dark:border-slate-700 shrink-0" data-alt="Silver laptop on white background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB5uH67VVPb7QVQkfqVOb1mvElG6Lkg7E3K-C5qKis-lolQkj-KKSO-3zKThVNL5yILQ3Qy1NVpw6GBpIgpnkEYEMtDxwTk4yMczhUVcVZ5pjshNx7CXNwTF0xOen06cIqBYF0Y6lq2-nPT95a79hSO8UQ7wIogGcxK9ClislKLMFRujIAadFIRoABLGgEvqOpGGpsiGI6J0VFhDmbUpU5rvJVx7bu8emS1vEzZTY56BNSacYSIY8QNk7-PU7dIL70fky5K9a6_ie4");'></div>
-                                    <div class="flex flex-col">
-                                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Apple MacBook Pro 16"</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">#MB-PRO-16</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
-                                    Electronics
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">$2,499.00</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm text-slate-700 dark:text-slate-300">15</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-900/30">
-                                    <span class="size-1.5 rounded-full bg-green-500"></span>
-                                    <span class="text-xs font-semibold">In Stock</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                                    <button class="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Edit Product">
-                                        <span class="material-symbols-outlined text-[20px]">edit</span>
-                                    </button>
-                                    <button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Delete Product">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <!-- Row 2 -->
-                        <tr class="group hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors cursor-pointer">
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-4">
-                                    <div class="size-12 rounded-lg bg-slate-100 dark:bg-slate-900 bg-cover bg-center border border-slate-200 dark:border-slate-700 shrink-0" data-alt="Black wireless mouse" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD15C6P2zyz17SMRoTnBitTqfKBP8Z95H0trRiAKPPFAGkLbXX2bX2X8Hd1t5xaSRJdE7wSpsYWZ_OXfhJ483fGLjQ59hiRjkuJpAVOl7sGoZYYr6X93tobFsr1f33BmM4LGRlc71Lim828dyh6YNN9YTh4HthD2YUZIhuGvRcmTL6WBZjnhkShAQXCsqYq6Ur7tu2NTvzaL2NwNEUylUghXGgUX1mzv-iMfFgSUGyOAt58-VrAhbZRuuNIm0-vOZp03jNE4wBT6rU");'></div>
-                                    <div class="flex flex-col">
-                                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Logitech MX Master 3</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">#LOG-MX-3</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
-                                    Accessories
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">$99.00</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm text-slate-700 dark:text-slate-300">45</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-900/30">
-                                    <span class="size-1.5 rounded-full bg-green-500"></span>
-                                    <span class="text-xs font-semibold">In Stock</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                                    <button class="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Edit">
-                                        <span class="material-symbols-outlined text-[20px]">edit</span>
-                                    </button>
-                                    <button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Delete">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <!-- Row 3 (Low Stock) -->
-                        <tr class="group hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors cursor-pointer bg-red-50/30 dark:bg-red-900/5">
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-4">
-                                    <div class="size-12 rounded-lg bg-slate-100 dark:bg-slate-900 bg-cover bg-center border border-slate-200 dark:border-slate-700 shrink-0" data-alt="Bag of coffee beans" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB_1eqtR1i5Hkx9ycPf2I8jgzFrCOtkWx-cQQ4ZH1N15bPkYzT9MCMZhgYFJC7slsRRDzzF7Z9ELEm_b48VQJRFB0oO0uXiJvKPbOQ6ZRgLdxzxLbTNHcy0EkDIFY0VvHxWLJL2ze3JhNaHNZKCEVVMuvef2QbW7_V0NLkKAarwoKyTPKH57WI2TjBdrN0OUQTe5uhrbNgBIuJpiSVWcj0FHnLukEgt6ZsufPDIiMAJJ4_FBIySQZn2Xz3n6QzuglCBSXRq9h901oQ");'></div>
-                                    <div class="flex flex-col">
-                                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Ethiopian Yirgacheffe (1kg)</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">#COF-ETH-1KG</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
-                                    Groceries
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">$28.00</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm text-red-600 dark:text-red-400 font-bold">3</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900/30">
-                                    <span class="size-1.5 rounded-full bg-red-500"></span>
-                                    <span class="text-xs font-semibold">Low Stock</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                                    <button class="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Edit">
-                                        <span class="material-symbols-outlined text-[20px]">edit</span>
-                                    </button>
-                                    <button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Delete">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <!-- Row 4 -->
-                        <tr class="group hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors cursor-pointer">
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-4">
-                                    <div class="size-12 rounded-lg bg-slate-100 dark:bg-slate-900 bg-cover bg-center border border-slate-200 dark:border-slate-700 shrink-0" data-alt="Modern smartwatch on white" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBTB1J-129Pz0aTbizNUGFsYvBcUK1q8Er631UjprspZIJ7aWd-CuPtpjkNeEiHbNxuXiB-OR6H1jFDatK3TgATXNYhNQo-qsP2uLdGGw-zV78OH_RKv4naDe_HCQ-xJC3BUTwmuLbhnxAZ6d4BShF-RShgI7LwyqsC9W8gOuhnl_YSXLShYp_1Mm4w8Io9bOkNPrz0ml2j38LIBzoIxnkK_O2fB1UkBdzJCa0zRWRDvPc3Xi8tr5OcaVHIoouyNXNPasxLstnEaqM");'></div>
-                                    <div class="flex flex-col">
-                                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Samsung Galaxy Watch 5</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">#SAM-GW-5</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
-                                    Electronics
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">$279.00</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm text-slate-700 dark:text-slate-300">22</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-900/30">
-                                    <span class="size-1.5 rounded-full bg-green-500"></span>
-                                    <span class="text-xs font-semibold">In Stock</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                                    <button class="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Edit">
-                                        <span class="material-symbols-outlined text-[20px]">edit</span>
-                                    </button>
-                                    <button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Delete">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <!-- Row 5 -->
-                        <tr class="group hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors cursor-pointer">
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-4">
-                                    <div class="size-12 rounded-lg bg-slate-100 dark:bg-slate-900 bg-cover bg-center border border-slate-200 dark:border-slate-700 shrink-0" data-alt="Green tea box" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB5cyVLywpaDTL8fTFb1lZfJL2DcQAXRiJ2EqHAA1kWUu3DgHXBBmhmQjr8Fz3d8Om1qZcR7eHOd7mzecbBKr4cIBMe6T2duiBga3FoDwJSGQEAxhuTp9vJfg3no3OUITLk-ZFnZXkllILgeI7FK5I0PNGqt97FOjQddh2sfOoY7Uuw0UcimFt5XC19J27m6cLsgNgaSk8A4JRVyH94voijm6zEu7vCJ674DAK6TGW8YXOe0ZuyXAqpO_zTp0Xf4W6izeOjpomhER0");'></div>
-                                    <div class="flex flex-col">
-                                        <p class="text-sm font-semibold text-slate-900 dark:text-white">Organic Green Tea (20pk)</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5">#GRO-TEA-ORG</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
-                                    Groceries
-                                </span>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">$4.50</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <p class="text-sm text-slate-700 dark:text-slate-300">120</p>
-                            </td>
-                            <td class="py-4 px-6">
-                                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-900/30">
-                                    <span class="size-1.5 rounded-full bg-green-500"></span>
-                                    <span class="text-xs font-semibold">In Stock</span>
-                                </div>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                                    <button class="p-2 text-slate-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Edit">
-                                        <span class="material-symbols-outlined text-[20px]">edit</span>
-                                    </button>
-                                    <button class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Delete">
-                                        <span class="material-symbols-outlined text-[20px]">delete</span>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- Pagination -->
-            <div class="mt-auto border-t border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
-                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                    <div>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">
-                            Showing <span class="font-bold text-slate-800 dark:text-white">1</span> to <span class="font-bold text-slate-800 dark:text-white">5</span> of <span class="font-bold text-slate-800 dark:text-white">124</span> results
-                        </p>
-                    </div>
-                    <div>
-                        <nav aria-label="Pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                            <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700">
-                                <span class="sr-only">Previous</span>
-                                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
-                            </button>
-                            <button aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">1</button>
-                            <button class="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium">2</button>
-                            <button class="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium">3</button>
-                            <span class="relative inline-flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200">...</span>
-                            <button class="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium">12</button>
-                            <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700">
-                                <span class="sr-only">Next</span>
-                                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
-                            </button>
-                        </nav>
-                    </div>
-                </div>
+            <div>
+                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Stok Menipis</p>
+                <p class="text-2xl font-bold text-slate-800 dark:text-white">{{ \App\Models\Produk::where('stok', '<', 5)->count() }}</p>
             </div>
         </div>
     </div>
+
+    <!-- Table -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 dark:bg-slate-900/50">
+                    <tr>
+                        <th class="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Nama Produk</th>
+                        <th class="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Kategori</th>
+                        <th class="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Harga</th>
+                        <th class="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Stok</th>
+                        <th class="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+                    @forelse($produk as $p)
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-slate-800 dark:text-white">{{ $p->nama_produk }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">
+                                {{ $p->kategori->nama_kategori ?? 'N/A' }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-800 dark:text-white text-right">
+                            Rp {{ number_format($p->harga, 0, ',', '.') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                            <span class="text-sm @if($p->stok < 5) text-red-600 font-bold @else text-slate-600 dark:text-slate-300 @endif">
+                                {{ $p->stok }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick='openEditModal(@json($p))' class="p-2 text-slate-400 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-[20px]">edit</span>
+                                </button>
+                                @if($p->detailTransaksi->count() > 0)
+                                <button onclick="alert('Produk tidak bisa dihapus karena sudah memiliki riwayat transaksi. Untuk menonaktifkan, silakan atur stok menjadi 0.')" class="p-2 text-slate-300 cursor-not-allowed" title="Terikat transaksi">
+                                    <span class="material-symbols-outlined text-[20px]">delete_forever</span>
+                                </button>
+                                @else
+                                <form action="{{ route('produk.destroy', $p->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                                        <span class="material-symbols-outlined text-[20px]">delete</span>
+                                    </button>
+                                </form>
+                                @endif
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="px-6 py-10 text-center text-slate-500 dark:text-slate-400">
+                            <div class="flex flex-col items-center gap-2">
+                                <span class="material-symbols-outlined text-4xl opacity-20">inventory_2</span>
+                                <p>Belum ada data produk.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @if($produk->hasPages())
+        <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+            {{ $produk->appends(['search' => request('search')])->links() }}
+        </div>
+        @endif
+    </div>
 </div>
-@endsection()
+
+<!-- Modal Produk -->
+<div id="produkModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity bg-slate-900/60 backdrop-blur-sm" aria-hidden="true" onclick="closeModal()"></div>
+        <div class="inline-block align-bottom bg-white dark:bg-slate-800 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-slate-200 dark:border-slate-700">
+            <form id="produkForm" method="POST">
+                @csrf
+                <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-white" id="modalTitle">Tambah Produk</h3>
+                    <button type="button" onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                <div class="px-6 py-6 space-y-4">
+                    <div class="space-y-1">
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Produk</label>
+                        <input type="text" name="nama_produk" id="nama_produk" required
+                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:ring-primary focus:border-primary text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Kategori</label>
+                        <select name="id_kategori" id="id_kategori" required
+                            class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:ring-primary focus:border-primary text-sm">
+                            <option value="">Pilih Kategori</option>
+                            @foreach($kategori as $k)
+                            <option value="{{ $k->id }}">{{ $k->nama_kategori }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Harga</label>
+                            <input type="number" name="harga" id="harga" required
+                                class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:ring-primary focus:border-primary text-sm">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Stok</label>
+                            <input type="number" name="stok" id="stok" required
+                                class="w-full rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-900 dark:text-white focus:ring-primary focus:border-primary text-sm">
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('js')
+<script>
+    const modal = document.getElementById('produkModal');
+    const form = document.getElementById('produkForm');
+    const modalTitle = document.getElementById('modalTitle');
+
+    function openAddModal() {
+        modalTitle.innerText = 'Tambah Produk';
+        form.action = "{{ route('produk.store') }}";
+        form.reset();
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function openEditModal(produk) {
+        modalTitle.innerText = 'Edit Produk';
+        form.action = `/produk/update/${produk.id}`;
+        document.getElementById('nama_produk').value = produk.nama_produk;
+        document.getElementById('id_kategori').value = produk.id_kategori;
+        document.getElementById('harga').value = produk.harga;
+        document.getElementById('stok').value = produk.stok;
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+</script>
+@endsection
