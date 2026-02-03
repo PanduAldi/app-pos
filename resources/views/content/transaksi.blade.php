@@ -12,101 +12,48 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                     <span class="material-symbols-outlined">search</span>
                 </div>
-                <input id="search-input" class="block w-full rounded-xl border-none bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" placeholder="Scan barcode or search item name/SKU..." type="text" />
+                <input id="search-input" class="block w-full rounded-xl border-none bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" placeholder="Cari nama produk atau SKU..." type="text" />
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-slate-400 hover:text-primary">
                     <span class="material-symbols-outlined">qr_code_scanner</span>
                 </div>
             </div>
             <!-- Categories Chips -->
             <div class="flex gap-2 overflow-x-auto custom-scrollbar pb-2" id="category-filters">
-                <button data-category="all" class="category-btn flex-shrink-0 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium transition-all shadow-sm shadow-primary/30"> All Items </button>
-                <button data-category="Beverages" class="category-btn flex-shrink-0 px-4 py-2 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-sm font-medium transition-all"> Beverages </button>
-                <button data-category="Pastries" class="category-btn flex-shrink-0 px-4 py-2 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-sm font-medium transition-all"> Pastries </button>
-                <button data-category="Main Courses" class="category-btn flex-shrink-0 px-4 py-2 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-sm font-medium transition-all"> Main Courses </button>
-                <button data-category="Merchandise" class="category-btn flex-shrink-0 px-4 py-2 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-sm font-medium transition-all"> Merchandise </button>
+                <button data-category="all" class="category-btn flex-shrink-0 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium transition-all shadow-sm shadow-primary/30"> Semua </button>
+                @foreach($kategori as $kat)
+                <button data-category="{{ $kat->nama_kategori }}" class="category-btn flex-shrink-0 px-4 py-2 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-sm font-medium transition-all"> {{ $kat->nama_kategori }} </button>
+                @endforeach
             </div>
         </div>
         <!-- Product Grid -->
         <div class="flex-1 overflow-y-auto p-6 pt-2 custom-scrollbar">
             <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4" id="product-grid">
-                <!-- Product Card 1 -->
+                @foreach($produk as $p)
+                <!-- Product Card -->
                 <div class="product-card group cursor-pointer flex flex-col rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary/50 transition-all active:scale-95"
-                    data-id="1" data-name="Cappuccino" data-price="4500" data-category="Beverages">
+                    data-id="{{ $p->id }}" data-name="{{ $p->nama_produk }}" data-price="{{ $p->harga }}" data-category="{{ $p->kategori->nama_kategori }}">
                     <div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl relative">
-                        <div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAzApRHW-UEHvHJZQKZ34qAYlhjarqj8SdpJm4_QJOLBdv0TFfTiWfwXvNDRslhzkmYeDIxY8JIMhGBvLxmJBy5NtJuAVJYHNprjj-KaGsi0MSViXNTbnq4iZzSlS0b9wjvd8F3C0jTHxomS6DTJ45t8u7N0wy7R3WTh1_Yc-swvQRYpZYyOEiLSN_G4VBBUb_joax9sebwpIbdBCcqqPX0er1BpAo_wjpHhBS4XgPDanTQo_qV2NRk44n-XBlm1efF6aEgbfEY9bo");'></div>
-                        <div class="absolute top-2 right-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-md px-2 py-0.5 text-xs font-bold shadow-sm text-slate-900 dark:text-white"> Rp 4.500 </div>
+                        {{-- Image placeholder --}}
+                        <div class="w-full h-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                            <span class="material-symbols-outlined text-slate-300 dark:text-slate-600 text-5xl">image</span>
+                        </div>
+                        <div class="absolute top-2 right-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-md px-2 py-0.5 text-xs font-bold shadow-sm text-slate-900 dark:text-white"> Rp {{ number_format($p->harga, 0, ',', '.') }} </div>
                     </div>
                     <div class="p-3 flex flex-col gap-1">
-                        <h3 class="product-name text-sm font-semibold text-slate-900 dark:text-white leading-tight">Cappuccino</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Beverages</p>
+                        <h3 class="product-name text-sm font-semibold text-slate-900 dark:text-white leading-tight">{{ $p->nama_produk }}</h3>
+                        <div class="flex justify-between items-center">
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">{{ $p->kategori->nama_kategori }}</p>
+                            <p class="text-[10px] font-bold {{ $p->stok < 10 ? 'text-red-500' : 'text-slate-400' }}">Stok: {{ $p->stok }}</p>
+                        </div>
                     </div>
                 </div>
-                <!-- Product Card 2 -->
-                <div class="product-card group cursor-pointer flex flex-col rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary/50 transition-all active:scale-95"
-                    data-id="2" data-name="Croissant" data-price="3000" data-category="Pastries">
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl relative">
-                        <div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCZ3KBoX1R18eO-lPyCs3u9ZXhbO7DgGtgeYFQt56TeUbQGLcZT8lYx17Z48hgOhoYD2-ygvxjY45VhDO8PSfBnMxnaoYQ7W58AuPY-IHJLuaHWAsmVRik7a-Ydfd8YqdMtFEsQwc1mlugxoqq87fbGExh88SD0nSIbHmg66YxmqnPoJb9tbddQOOGsd9Kgj4uti6gM3J6nFdBDx9aXNlmADkr00RHs3Y05zcwpMljLkYC2UipsOtYGbf_nMvbYvh547lEtKFRQne0");'></div>
-                        <div class="absolute top-2 right-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-md px-2 py-0.5 text-xs font-bold shadow-sm text-slate-900 dark:text-white"> Rp 3.000 </div>
-                    </div>
-                    <div class="p-3 flex flex-col gap-1">
-                        <h3 class="product-name text-sm font-semibold text-slate-900 dark:text-white leading-tight">Croissant</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Pastries</p>
-                    </div>
-                </div>
-                <!-- Product Card 3 -->
-                <div class="product-card group cursor-pointer flex flex-col rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary/50 transition-all active:scale-95"
-                    data-id="3" data-name="Iced Latte" data-price="5000" data-category="Beverages">
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl relative">
-                        <div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD7puXV0uYRTIytN_jI5A8Azz40Tt0oKZDd0IxAIJdbn0qwQKOgs45rI2MadCy6B3NqM-niAcm-z4cJnmD8VNBhobmbwYsk88DKXs0ElDwiVwSb1oRfDTbc6rSribdopBPMQxRLM-VxRhELWRAkBhivbFNDJT2Y-gp8108MeHCf03IB8WwU6gjcb8kQL9Uetymu1xYmijMUX8kXvKtnt1S55NauN3LrWXnwWwjakv3JRsgaJrrQzeNka1DYyayoqNxEiYotRdpIGuU");'></div>
-                        <div class="absolute top-2 right-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-md px-2 py-0.5 text-xs font-bold shadow-sm text-slate-900 dark:text-white"> Rp 5.000 </div>
-                    </div>
-                    <div class="p-3 flex flex-col gap-1">
-                        <h3 class="product-name text-sm font-semibold text-slate-900 dark:text-white leading-tight">Iced Latte</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Beverages</p>
-                    </div>
-                </div>
-                <!-- Product Card 4 -->
-                <div class="product-card group cursor-pointer flex flex-col rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary/50 transition-all active:scale-95"
-                    data-id="4" data-name="Cookie" data-price="2500" data-category="Pastries">
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl relative">
-                        <div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDVtWjAB8XBuq8Hb-sbR3SuOCyxtbmnfnaIHDBJMX5DAvsFK1_Y_qppdAMhlh6kJmIKxyjLkCgIb1iwnugI5kRgwhHG5jvtIUtcXLwuLrzUhbrLTdGbaU8lWyd_pX5jikSx4V7VsvZq75HyS01ONPdHEU28DAZo-DmIZqYIkb5ApUe9dJWCa3xeVTnz330LQTFufiJW1StHQOy3Zbg8x4Oa3WfmqVMzCqJcvhaDyjTf3RaeuyNQFdN9mNtOb1uIpAEAGwFHipqO_ao");'></div>
-                        <div class="absolute top-2 right-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-md px-2 py-0.5 text-xs font-bold shadow-sm text-slate-900 dark:text-white"> Rp 2.500 </div>
-                    </div>
-                    <div class="p-3 flex flex-col gap-1">
-                        <h3 class="product-name text-sm font-semibold text-slate-900 dark:text-white leading-tight">Cookie</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Pastries</p>
-                    </div>
-                </div>
-                <!-- Product Card 5 -->
-                <div class="product-card group cursor-pointer flex flex-col rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary/50 transition-all active:scale-95"
-                    data-id="5" data-name="Avocado Toast" data-price="8500" data-category="Main Courses">
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl relative">
-                        <div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCQ6FLkS2cOXGvbyB6eUY455FYfVwZknSmDWdWHJuu6YkHesXwgvL_aYYLTfe2ZX_kYkw-BGAI0Rog6TiuGUf6Kf79G_Cf5JiaomwtnCVFmdiBWieftc63snnkVbt0bcvKDF_eXTgGSY7cqDaKk9h9ltyCcqJNFzBgOVP2bz7iyypq8JojurkTetkrqiJcwp45LdqVZZhyJ2hDJTTVauE3gjdDGzcHuDPPWr04mjird31lIvR3MqXPaQtmqO5h95ujFO5QbyzkWDOE");'></div>
-                        <div class="absolute top-2 right-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-md px-2 py-0.5 text-xs font-bold shadow-sm text-slate-900 dark:text-white"> Rp 8.500 </div>
-                    </div>
-                    <div class="p-3 flex flex-col gap-1">
-                        <h3 class="product-name text-sm font-semibold text-slate-900 dark:text-white leading-tight">Avocado Toast</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Main Courses</p>
-                    </div>
-                </div>
-                <!-- Product Card 6 -->
-                <div class="product-card group cursor-pointer flex flex-col rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary/50 transition-all active:scale-95"
-                    data-id="6" data-name="Green Tea" data-price="3500" data-category="Beverages">
-                    <div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl relative">
-                        <div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC7hWYaJNdXqyEmIRNxsqsWEslLFkdlkkSaCNF4qa2QrWFtdBGKSUbzmDLybeUbC9a6Wua7b5QN1AgAiLpRkYDcJ720QFyAjbgWWspAIo5Iphw4gM1haJGpe7DU4RFExp8sTY6ypOAGPiLSSy32X5ywTJAQBNuRSv7gkylC7lu3lkjsATNhq1NJcUZV47u929sQXfNvCZhQ_o9Ibw9wDosCwKaLxyjF5Nok5hwo3r832RIxiDg7jSPxbgF3_0ApNkDH17U136Yq4Lk");'></div>
-                        <div class="absolute top-2 right-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-md px-2 py-0.5 text-xs font-bold shadow-sm text-slate-900 dark:text-white"> Rp 3.500 </div>
-                    </div>
-                    <div class="p-3 flex flex-col gap-1">
-                        <h3 class="product-name text-sm font-semibold text-slate-900 dark:text-white leading-tight">Green Tea</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Beverages</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
             <!-- Empty State Search -->
             <div id="empty-search" class="hidden flex-col items-center justify-center py-20 text-slate-400">
                 <span class="material-symbols-outlined text-6xl mb-4">search_off</span>
-                <p class="text-lg font-medium">No products found</p>
-                <p class="text-sm">Try using different keywords or categories</p>
+                <p class="text-lg font-medium">Produk tidak ditemukan</p>
+                <p class="text-sm">Coba gunakan kata kunci atau kategori lain</p>
             </div>
         </div>
     </div>
@@ -115,9 +62,9 @@
         <!-- Cart Header -->
         <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <h3 class="font-semibold text-slate-800 dark:text-white flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">shopping_cart</span> Current Order
+                <span class="material-symbols-outlined text-primary">shopping_cart</span> Pesanan Saat Ini
             </h3>
-            <button id="clear-cart" class="text-xs font-medium text-red-500 hover:text-red-600 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-md transition-colors"> Clear All </button>
+            <button id="clear-cart" class="text-xs font-medium text-red-500 hover:text-red-600 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-md transition-colors"> Hapus Semua </button>
         </div>
         <!-- Cart Items Table -->
         <div class="flex-1 overflow-y-auto custom-scrollbar p-0">
@@ -125,7 +72,7 @@
                 <thead class="bg-slate-50 dark:bg-slate-800/50 sticky top-0 z-10 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     <tr>
                         <th class="px-4 py-3 w-5/12">Item</th>
-                        <th class="px-2 py-3 w-3/12 text-center">Qty</th>
+                        <th class="px-2 py-3 w-3/12 text-center">Jumlah</th>
                         <th class="px-4 py-3 w-4/12 text-right">Total</th>
                     </tr>
                 </thead>
@@ -136,8 +83,8 @@
             <!-- Empty State Cart -->
             <div id="cart-empty-state" class="flex flex-col items-center justify-center py-20 text-slate-400">
                 <span class="material-symbols-outlined text-6xl mb-4">shopping_cart_checkout</span>
-                <p class="text-base font-medium">Cart is empty</p>
-                <p class="text-xs">Add some products to start</p>
+                <p class="text-base font-medium">Keranjang kosong</p>
+                <p class="text-xs">Tambah produk untuk memulai</p>
             </div>
         </div>
         <!-- Calculations & Payment Footer -->
@@ -149,7 +96,7 @@
                     <span id="subtotal-display" class="font-medium text-slate-900 dark:text-white">Rp 0</span>
                 </div>
                 <div class="flex justify-between text-sm text-slate-500 dark:text-slate-400">
-                    <span>Tax (2.5%)</span>
+                    <span>Pajak (2.5%)</span>
                     <span id="tax-display" class="font-medium text-slate-900 dark:text-white">Rp 0</span>
                 </div>
                 <div class="flex justify-between items-center mt-2">
@@ -159,32 +106,32 @@
             </div>
             <!-- Payment Input -->
             <div class="flex flex-col gap-3">
-                <label class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Payment Method</label>
+                <label class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Metode Pembayaran</label>
                 <div class="flex gap-2" id="payment-methods">
                     <button data-method="cash" class="payment-method-btn flex-1 py-2 rounded-lg bg-white dark:bg-slate-800 border-2 border-primary text-primary text-sm font-medium flex justify-center items-center gap-2 shadow-sm">
-                        <span class="material-symbols-outlined text-lg">payments</span> Cash </button>
+                        <span class="material-symbols-outlined text-lg">payments</span> Tunai </button>
                     <button data-method="card" class="payment-method-btn flex-1 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex justify-center items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700">
-                        <span class="material-symbols-outlined text-lg">credit_card</span> Card </button>
+                        <span class="material-symbols-outlined text-lg">credit_card</span> Kartu </button>
                     <button data-method="qr" class="payment-method-btn flex-1 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-sm font-medium flex justify-center items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700">
                         <span class="material-symbols-outlined text-lg">qr_code</span> QRIS </button>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mt-1">
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs text-slate-500">Cash Received</label>
+                        <label class="text-xs text-slate-500">Uang Diterima</label>
                         <div class="relative">
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium">Rp</span>
                             <input id="cash-received" class="w-full rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 pl-8 pr-3 py-2 text-sm font-medium focus:ring-primary focus:border-primary dark:text-white" type="number" step="1" value="0" />
                         </div>
                     </div>
                     <div class="flex flex-col gap-1">
-                        <label class="text-xs text-slate-500">Change</label>
+                        <label class="text-xs text-slate-500">Kembalian</label>
                         <div id="change-display" class="w-full rounded-lg bg-slate-100 dark:bg-slate-800 border border-transparent px-3 py-2 text-sm font-bold text-slate-700 dark:text-slate-300"> Rp 0 </div>
                     </div>
                 </div>
             </div>
             <!-- Action Button -->
             <button id="save-transaction" class="w-full mt-2 bg-primary hover:bg-blue-600 text-white font-semibold py-4 rounded-xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                <span class="material-symbols-outlined">check_circle</span> Save Transaction </button>
+                <span class="material-symbols-outlined">check_circle</span> Simpan Transaksi </button>
         </div>
     </aside>
 </div>

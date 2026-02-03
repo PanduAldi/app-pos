@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html class="light" lang="en">
 
 <head>
@@ -42,12 +41,28 @@
         <div class="pt-10 pb-6 px-8 flex flex-col items-center">
             <!-- Logo -->
             <img src="/logo.png" alt="Logo" class="w-16 h-16 mb-6 object-contain">
-            <h2 class="text-slate-900 dark:text-white tracking-tight text-[28px] font-bold leading-tight text-center">Cafe BarisKode</h2>
+            <h2 class="text-slate-900 dark:text-white tracking-tight text-[28px] font-bold leading-tight text-center">BarisKode Cafe</h2>
             <p class="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal pt-2 text-center">Silahkan login</p>
         </div>
+
+        <!-- error sectioon -->
+        @if ($errors->any())
+        <div class="px-8 pb-10">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                <strong class="font-bold">Error!</strong>
+                <ul class="mt-2">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+        @endif
+
+
         <!-- Form Section -->
         <div class="px-8 pb-10">
-            <form action="{{ route('login') }}" method="POST" class="flex flex-col gap-5">
+            <form action="{{ route('postLogin') }}" method="POST" class="flex flex-col gap-5">
                 @csrf
                 <!-- Username Field -->
                 <div class="flex flex-col gap-2">
@@ -55,7 +70,7 @@
                         Username
                     </label>
                     <div class="relative">
-                        <input class="form-input w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white h-12 px-4 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200" placeholder="cth: kasir" type="text" />
+                        <input class="form-input w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white h-12 px-4 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200" placeholder="cth: kasir" name="username" type="text" />
                     </div>
                 </div>
                 <!-- Password Field -->
@@ -66,14 +81,12 @@
                         </label>
                     </div>
                     <div class="relative flex items-center">
-                        <input class="form-input w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white h-12 pl-4 pr-12 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200" placeholder="••••••••" type="password" />
+                        <input type="password" class="form-input w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white h-12 pl-4 pr-12 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200" placeholder="••••••••" name="password" autocomplete="off" />
                         <button class="absolute right-0 top-0 bottom-0 px-3 flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors" type="button">
                             <span class="material-symbols-outlined text-[20px]">visibility_off</span>
                         </button>
                     </div>
-                    <div class="flex justify-end mt-1">
-                        <a class="text-primary text-sm font-medium hover:text-blue-600 transition-colors" href="#">Forgot Password?</a>
-                    </div>
+
                 </div>
                 <!-- Submit Button -->
                 <button onclick="window.location.href='/dashboard'" class="mt-2 w-full bg-primary hover:bg-blue-600 text-white font-medium h-12 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2">
