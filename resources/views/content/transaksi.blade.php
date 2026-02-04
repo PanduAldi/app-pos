@@ -12,7 +12,7 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                     <span class="material-symbols-outlined">search</span>
                 </div>
-                <input id="search-input" class="block w-full rounded-xl border-none bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" placeholder="Cari nama produk atau SKU..." type="text" />
+                <input id="search-input" class="block w-full rounded-xl border-none bg-white dark:bg-slate-800 py-3 pl-10 pr-4 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-200 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" placeholder="Cari" type="text" />
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-slate-400 hover:text-primary">
                     <span class="material-symbols-outlined">qr_code_scanner</span>
                 </div>
@@ -227,6 +227,10 @@
             taxDisplay.textContent = formatRupiah(tax);
             totalDisplay.textContent = formatRupiah(total);
 
+            if (paymentMethod !== 'cash') {
+                cashReceivedInput.value = total;
+            }
+
             updateChange();
         }
 
@@ -413,6 +417,18 @@
                 btn.classList.add('border-primary', 'text-primary', 'border-2');
                 btn.classList.remove('border-slate-200', 'dark:border-slate-700', 'text-slate-600', 'dark:text-slate-300', 'border');
                 paymentMethod = btn.dataset.method;
+
+                if (paymentMethod !== 'cash') {
+                    const totalText = totalDisplay.textContent.replace(/[^\d]/g, '');
+                    const total = parseInt(totalText) || 0;
+                    cashReceivedInput.value = total;
+                    cashReceivedInput.readOnly = true;
+                    cashReceivedInput.classList.add('bg-slate-50', 'dark:bg-slate-900/50', 'cursor-not-allowed');
+                } else {
+                    cashReceivedInput.readOnly = false;
+                    cashReceivedInput.classList.remove('bg-slate-50', 'dark:bg-slate-900/50', 'cursor-not-allowed');
+                }
+                updateChange();
             });
         });
 
