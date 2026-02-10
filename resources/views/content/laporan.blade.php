@@ -1,5 +1,66 @@
 @extends('layout.layout')
 
+@section('css')
+<style>
+    /* Styling for the receipt preview */
+    .receipt-preview {
+        font-family: 'Courier New', Courier, monospace;
+        text-align: left;
+        font-size: 13px;
+        line-height: 1.2;
+        color: #000;
+        background: #fff;
+        padding: 20px;
+        border: 1px solid #eee;
+        max-width: 320px;
+        margin: 0 auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .receipt-header {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .receipt-title {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 2px;
+    }
+
+    .receipt-divider {
+        border-top: 1px dashed #000;
+        margin: 8px 0;
+    }
+
+    .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2px;
+    }
+
+    /* Print styles */
+    @media print {
+        body>*:not(#receipt-print) {
+            display: none !important;
+        }
+
+        #receipt-print {
+            display: block !important;
+            width: 80mm;
+            padding: 0;
+            margin: 0 auto;
+            background: #fff;
+        }
+
+        @page {
+            size: 80mm auto;
+            margin: 0;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="p-6 space-y-6">
     <!-- Header & Filter -->
@@ -122,6 +183,59 @@
     </div>
 </div>
 
+<!-- Receipt Template (Hidden from screen view) -->
+<div id="receipt-print" class="hidden">
+    <div class="receipt-preview" style="width: 100%; border: none; box-shadow: none;">
+        <div class="receipt-header">
+            <div class="receipt-title">CAFE BARISKODE</div>
+            <div class="receipt-address">Jl. Code No. 123, Indonesia</div>
+            <div class="receipt-phone">0812-3456-7890</div>
+        </div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-info">
+            <div class="receipt-row">
+                <span>No Trans:</span>
+                <span id="p-kode-transaksi">-</span>
+            </div>
+            <div class="receipt-row">
+                <span>Tanggal:</span>
+                <span id="p-tanggal">-</span>
+            </div>
+            <div class="receipt-row">
+                <span>Kasir:</span>
+                <span id="p-kasir">-</span>
+            </div>
+        </div>
+        <div class="receipt-divider"></div>
+        <div id="p-items">
+            <!-- Items will be injected here -->
+        </div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-totals">
+            <div class="receipt-row">
+                <span>Total</span>
+                <span id="p-total">Rp 0</span>
+            </div>
+        </div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-payment">
+            <div class="receipt-row">
+                <span>Bayar (<span id="p-metode">-</span>)</span>
+                <span id="p-bayar">Rp 0</span>
+            </div>
+            <div class="receipt-row">
+                <span>Kembali</span>
+                <span id="p-kembali">Rp 0</span>
+            </div>
+        </div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-footer" style="text-align: center; margin-top: 10px;">
+            <p>Terima Kasih</p>
+            <p>Silahkan Datang Kembali</p>
+        </div>
+    </div>
+</div>
+
 <!-- Transaction Detail Modal -->
 <div id="detailModal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
@@ -188,7 +302,10 @@
                 </div>
             </div>
 
-            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 flex justify-end">
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 flex justify-end gap-2">
+                <button onclick="printCurrentTransaction()" class="px-4 py-2 text-sm font-medium bg-primary text-white hover:bg-blue-600 rounded-lg transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">print</span> Cetak Struk
+                </button>
                 <button onclick="closeModal()" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors">
                     Tutup
                 </button>
@@ -293,6 +410,7 @@
 
     // Modal variable in global scope
     const modal = document.getElementById('detailModal');
+    let currentTransaction = null;
 
     // showDetail in global scope
     window.showDetail = function(id) {
@@ -303,6 +421,7 @@
         fetch(`/laporan/detail/${id}`)
             .then(response => response.json())
             .then(data => {
+                currentTransaction = data;
                 document.getElementById('modal-kode').textContent = data.kode_transaksi;
                 document.getElementById('modal-tanggal').textContent = new Date(data.tanggal).toLocaleString('id-ID', {
                     dateStyle: 'long',
@@ -339,10 +458,41 @@
             });
     };
 
+    window.printCurrentTransaction = function() {
+        if (!currentTransaction) return;
+
+        // Populate Receipt
+        document.getElementById('p-kode-transaksi').textContent = currentTransaction.kode_transaksi;
+        document.getElementById('p-tanggal').textContent = new Date(currentTransaction.tanggal).toLocaleString('id-ID');
+        document.getElementById('p-metode').textContent = currentTransaction.metode_pembayaran.toUpperCase();
+        document.getElementById('p-kasir').textContent = currentTransaction.user ? currentTransaction.user.name : 'System';
+        document.getElementById('p-total').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(currentTransaction.total);
+        document.getElementById('p-bayar').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(currentTransaction.bayar);
+        document.getElementById('p-kembali').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(currentTransaction.kembali);
+
+        const itemsContainer = document.getElementById('p-items');
+        itemsContainer.innerHTML = '';
+        currentTransaction.detail_transaksi.forEach(item => {
+            const itemRow = document.createElement('div');
+            itemRow.className = 'receipt-row';
+            itemRow.innerHTML = `<span>${item.produk.nama_produk} x${item.qty}</span><span>Rp ${new Intl.NumberFormat('id-ID').format(item.subtotal)}</span>`;
+            itemsContainer.appendChild(itemRow);
+        });
+
+        const receipt = document.getElementById('receipt-print');
+        // Move receipt to body root before printing to avoid "blank page" issues
+        if (receipt.parentElement !== document.body) {
+            document.body.appendChild(receipt);
+        }
+
+        window.print();
+    };
+
     window.closeModal = function() {
         if (!modal) return;
         modal.classList.add('hidden');
         document.body.style.overflow = 'auto';
+        currentTransaction = null;
     };
 </script>
 @endsection

@@ -1,6 +1,134 @@
 @extends('layout.layout')
 
+@section('css')
+<style>
+    /* Styling for the receipt preview in SweetAlert */
+    .receipt-preview {
+        font-family: 'Courier New', Courier, monospace;
+        text-align: left;
+        font-size: 13px;
+        line-height: 1.2;
+        color: #000;
+        background: #fff;
+        padding: 20px;
+        border: 1px solid #eee;
+        max-width: 320px;
+        margin: 0 auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .receipt-header {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .receipt-title {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 2px;
+    }
+
+    .receipt-divider {
+        border-top: 1px dashed #000;
+        margin: 8px 0;
+    }
+
+    .receipt-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 2px;
+    }
+
+    .receipt-item-details {
+        padding-left: 10px;
+        font-size: 12px;
+        font-style: italic;
+    }
+
+    /* Print styles */
+    @media print {
+        body>*:not(#receipt-print) {
+            display: none !important;
+        }
+
+        #receipt-print {
+            display: block !important;
+            width: 80mm;
+            padding: 0;
+            margin: 0 auto;
+            background: #fff;
+        }
+
+        @page {
+            size: 80mm auto;
+            margin: 0;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
+<!-- Receipt Template (Hidden from screen view) -->
+<div id="receipt-print" class="hidden">
+    <div class="receipt-preview" style="width: 100%; border: none; box-shadow: none;">
+        <div class="receipt-header">
+            <div class="receipt-title">CAFE BARISKODE</div>
+            <div class="receipt-address">Jl. Code No. 123, Indonesia</div>
+            <div class="receipt-phone">0812-3456-7890</div>
+        </div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-info">
+            <div class="receipt-row">
+                <span>No Trans:</span>
+                <span id="p-kode-transaksi">-</span>
+            </div>
+            <div class="receipt-row">
+                <span>Tanggal:</span>
+                <span id="p-tanggal">-</span>
+            </div>
+            <div class="receipt-row">
+                <span>Kasir:</span>
+                <span id="p-kasir">{{ auth()->user()->name }}</span>
+            </div>
+        </div>
+        <div class="receipt-divider"></div>
+        <div id="p-items">
+            <!-- Items will be injected here -->
+        </div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-totals">
+            <div class="receipt-row">
+                <span>Subtotal</span>
+                <span id="p-subtotal">Rp 0</span>
+            </div>
+            <div class="receipt-row">
+                <span>Pajak (2.5%)</span>
+                <span id="p-tax">Rp 0</span>
+            </div>
+            <div class="receipt-row font-bold" style="font-weight: bold;">
+                <span>TOTAL</span>
+                <span id="p-total">Rp 0</span>
+            </div>
+        </div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-payment">
+            <div class="receipt-row">
+                <span>Bayar (<span id="p-metode">-</span>)</span>
+                <span id="p-bayar">Rp 0</span>
+            </div>
+            <div class="receipt-row">
+                <span>Kembali</span>
+                <span id="p-kembali">Rp 0</span>
+            </div>
+        </div>
+        <div class="receipt-divider"></div>
+        <div class="receipt-footer" style="text-align: center; margin-top: 10px;">
+            <p>Terima Kasih</p>
+            <p>Silahkan Datang Kembali</p>
+        </div>
+    </div>
+</div>
+
 <!-- Split View Content -->
 <div class="flex flex-1 overflow-hidden h-full">
     <!-- Left Side: Product Catalog -->
@@ -435,7 +563,109 @@
         // Cash Received
         cashReceivedInput.addEventListener('input', updateChange);
 
-        // Save Transaction
+        // --- Transaction Logic ---
+
+        function handleSaveTransaction(total, received, paymentMethod) {
+            fetch('/transaksi', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        total: total,
+                        bayar: paymentMethod === 'cash' ? received : total,
+                        kembali: paymentMethod === 'cash' ? (received - total) : 0,
+                        metode_pembayaran: paymentMethod,
+                        items: cart
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        populateReceipt(data, total, received, paymentMethod);
+
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: data.message,
+                            icon: 'success',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3b82f6',
+                            cancelButtonColor: '#64748b',
+                            confirmButtonText: 'Cetak Struk',
+                            cancelButtonText: 'Selesai',
+                            allowOutsideClick: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                showReceiptPreview();
+                            } else {
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire('Gagal', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'Terjadi kesalahan sistem.', 'error');
+                });
+        }
+
+        function populateReceipt(data, total, received, paymentMethod) {
+            document.getElementById('p-kode-transaksi').textContent = data.kode_transaksi;
+            document.getElementById('p-tanggal').textContent = new Date().toLocaleString('id-ID');
+            document.getElementById('p-metode').textContent = paymentMethod.toUpperCase();
+            document.getElementById('p-subtotal').textContent = subtotalDisplay.textContent;
+            document.getElementById('p-tax').textContent = taxDisplay.textContent;
+            document.getElementById('p-total').textContent = totalDisplay.textContent;
+            document.getElementById('p-bayar').textContent = formatRupiah(paymentMethod === 'cash' ? received : total);
+            document.getElementById('p-kembali').textContent = changeDisplay.textContent;
+
+            const itemsContainer = document.getElementById('p-items');
+            itemsContainer.innerHTML = '';
+            cart.forEach(item => {
+                const itemRow = document.createElement('div');
+                itemRow.className = 'receipt-row';
+                itemRow.innerHTML = `<span>${item.name} x${item.qty}</span><span>${formatRupiah(item.price * item.qty)}</span>`;
+                itemsContainer.appendChild(itemRow);
+            });
+        }
+
+        function showReceiptPreview() {
+            const receiptContent = document.getElementById('receipt-print').innerHTML;
+            Swal.fire({
+                title: 'Preview Struk',
+                html: `<div class="receipt-preview-container" style="background: #f1f5f9; padding: 10px; border-radius: 8px;">${receiptContent}</div>`,
+                width: '400px',
+                showCancelButton: true,
+                confirmButtonColor: '#3b82f6',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Cetak Sekarang',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    printReceipt();
+                } else {
+                    window.location.reload();
+                }
+            });
+        }
+
+        function printReceipt() {
+            const receipt = document.getElementById('receipt-print');
+            // Move receipt to body root before printing to avoid "blank page" issues
+            // caused by nested elements being hidden in print media
+            if (receipt.parentElement !== document.body) {
+                document.body.appendChild(receipt);
+            }
+            window.print();
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        }
+
+        // Save Transaction Event
         saveBtn.addEventListener('click', () => {
             const totalText = totalDisplay.textContent.replace(/[^\d]/g, '');
             const total = parseInt(totalText);
@@ -455,11 +685,11 @@
 
             if (paymentMethod === 'qris') {
                 confirmHtml += `
-                    <div class="mt-4 p-4 bg-white border rounded-xl flex flex-col items-center gap-2">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=POS-CAFE-${Date.now()}" alt="QRIS" class="w-128 h-128">
-                        <p class="text-[10px] text-slate-400 font-mono">Scan untuk QRIS</p>
-                    </div>
-                `;
+                            <div class="mt-4 p-4 bg-white border rounded-xl flex flex-col items-center gap-2">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=POS-CAFE-${Date.now()}" alt="QRIS" class="w-128 h-128">
+                                <p class="text-[10px] text-slate-400 font-mono">Scan untuk QRIS</p>
+                            </div>
+                        `;
             }
 
             Swal.fire({
@@ -473,7 +703,6 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Show loading
                     Swal.fire({
                         title: 'Memproses...',
                         allowOutsideClick: false,
@@ -482,47 +711,7 @@
                         }
                     });
 
-                    // Send data
-                    fetch('/transaksi', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                total: total,
-                                bayar: paymentMethod === 'cash' ? received : total,
-                                kembali: paymentMethod === 'cash' ? (received - total) : 0,
-                                metode_pembayaran: paymentMethod,
-                                items: cart
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.fire({
-                                    title: 'Berhasil!',
-                                    text: data.message,
-                                    icon: 'success',
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                }).then(() => {
-                                    // Reset POS
-                                    cart = [];
-                                    cashReceivedInput.value = '0';
-                                    updateCartUI();
-                                    // Refresh page or update stock via JS? 
-                                    // Refresh is simpler to sync all data
-                                    window.location.reload();
-                                });
-                            } else {
-                                Swal.fire('Gagal', data.message, 'error');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            Swal.fire('Error', 'Terjadi kesalahan sistem.', 'error');
-                        });
+                    handleSaveTransaction(total, received, paymentMethod);
                 }
             });
         });
